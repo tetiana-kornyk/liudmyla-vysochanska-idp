@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IDP-2026 — Liudmyla Vysochanska</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f0;
+    --paper:#ffffff;
+    --ink:#14213d;
+    --ink-soft:#5c6672;
+    --ink-faint:#8b93a0;
+    --border:#dde2e5;
+    --pass:#1f7a4c;
+    --pass-bg:#e6f4ec;
+    --prog:#a8730a;
+    --prog-bg:#faf1de;
+    --todo:#8b93a0;
+    --todo-bg:#eef0f2;
+    --accent:#2f5f8a;
+    --accent-soft:#e7eff5;
+    --high:#a3402c;
+    --high-bg:#f7e9e5;
+    --display:'Space Grotesk',sans-serif;
+    --body:'IBM Plex Sans',sans-serif;
+    --mono:'IBM Plex Mono',monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      linear-gradient(180deg,var(--bg) 0%, var(--bg) 100%);
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.5;
+    padding:0 0 80px 0;
+  }
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px;}
+
+  /* ---------- Header / run summary ---------- */
+  .runbar{
+    background:var(--ink);
+    color:#fff;
+    padding:34px 0 26px 0;
+    border-bottom:4px solid var(--accent);
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#9fb3d1;
+    margin:0 0 10px 0;
+  }
+  h1{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:34px;
+    margin:0 0 6px 0;
+    letter-spacing:-0.01em;
+  }
+  .sub{
+    color:#c3ccd9;
+    font-size:15px;
+    margin:0 0 22px 0;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px 28px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:#c3ccd9;
+    margin-bottom:22px;
+  }
+  .meta-row b{color:#fff;font-weight:600;}
+
+  .runstat{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    background:rgba(255,255,255,.06);
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:10px;
+    padding:16px 18px;
+  }
+  .runstat .pct{
+    font-family:var(--display);
+    font-size:30px;
+    font-weight:700;
+    min-width:70px;
+  }
+  .runstat .bar-track{
+    flex:1;
+    height:10px;
+    background:rgba(255,255,255,.14);
+    border-radius:6px;
+    overflow:hidden;
+  }
+  .runstat .bar-fill{
+    height:100%;
+    background:linear-gradient(90deg,#3a7a52,#57a374);
+    width:0%;
+    transition:width .4s ease;
+  }
+  .runstat .label{font-family:var(--mono);font-size:12px;color:#c3ccd9;}
+  .target-note{
+    font-size:13px;
+    color:#c3ccd9;
+    margin-top:12px;
+  }
+  .target-note b{color:#e8c77a;}
+
+  /* ---------- Phase sections ---------- */
+  .phase{margin-top:44px;}
+  .phase-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:10px;
+    margin-bottom:18px;
+  }
+  .phase-title{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:20px;
+    display:flex;
+    align-items:baseline;
+    gap:10px;
+  }
+  .phase-tag{
+    font-family:var(--mono);
+    font-size:12px;
+    background:var(--ink);
+    color:#fff;
+    padding:2px 8px;
+    border-radius:4px;
+  }
+  .phase-dates{
+    font-family:var(--mono);
+    font-size:12.5px;
+    color:var(--ink-soft);
+  }
+  .phase-progress{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-soft);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .mini-track{width:90px;height:6px;background:var(--todo-bg);border-radius:4px;overflow:hidden;}
+  .mini-fill{height:100%;background:var(--pass);width:0%;transition:width .4s ease;}
+  .phase-blurb{
+    font-size:14px;
+    color:var(--ink-soft);
+    margin:-6px 0 20px 0;
+    max-width:640px;
+  }
+
+  /* ---------- Test case card ---------- */
+  .case{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin-bottom:16px;
+    overflow:hidden;
+  }
+  .case-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:14px 18px;
+    border-bottom:1px solid var(--border);
+    cursor:pointer;
+    user-select:none;
+  }
+  .case-head-left{display:flex;align-items:center;gap:12px;min-width:0;}
+  .case-id{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--ink-faint);
+    white-space:nowrap;
+  }
+  .case-title{
+    font-family:var(--display);
+    font-weight:600;
+    font-size:16px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .priority{
+    font-family:var(--mono);
+    font-size:10.5px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    padding:3px 8px;
+    border-radius:100px;
+    white-space:nowrap;
+  }
+  .priority.high{background:var(--high-bg);color:var(--high);}
+  .priority.medium{background:var(--prog-bg);color:var(--prog);}
+
+  .status-badge{
+    font-family:var(--mono);
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.06em;
+    padding:5px 10px;
+    border-radius:6px;
+    white-space:nowrap;
+  }
+  .status-badge.todo{background:var(--todo-bg);color:var(--todo);}
+  .status-badge.progress{background:var(--prog-bg);color:var(--prog);}
+  .status-badge.pass{background:var(--pass-bg);color:var(--pass);}
+
+  .chev{
+    font-size:12px;
+    color:var(--ink-faint);
+    transition:transform .2s ease;
+    flex-shrink:0;
+  }
+  .case.open .chev{transform:rotate(180deg);}
+
+  .case-body{
+    padding:0 18px 18px 18px;
+    display:none;
+  }
+  .case.open .case-body{display:block;}
+
+  .field{margin-top:14px;}
+  .field-label{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--ink-faint);
+    margin-bottom:6px;
+  }
+  .precondition{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    background:var(--todo-bg);
+    border-left:3px solid var(--todo);
+    padding:8px 12px;
+    border-radius:0 6px 6px 0;
+  }
+  .expected{
+    font-size:13.5px;
+    color:var(--pass);
+    background:var(--pass-bg);
+    border-left:3px solid var(--pass);
+    padding:8px 12px;
+    border-radius:0 6px 6px 0;
+  }
+  .steps{list-style:none;margin:0;padding:0;}
+  .step{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:7px 0;
+    border-bottom:1px solid #f1f2f4;
+    font-size:14px;
+  }
+  .step:last-child{border-bottom:none;}
+  .step input[type=checkbox]{
+    margin-top:3px;
+    width:16px;height:16px;
+    accent-color:var(--pass);
+    flex-shrink:0;
+    cursor:pointer;
+  }
+  .step label{cursor:pointer;}
+  .step.checked label{color:var(--ink-faint);text-decoration:line-through;}
+  .resources{
+    font-size:13px;
+    color:var(--ink-soft);
+  }
+  .resources i{color:var(--ink-faint);}
+  textarea.notes{
+    width:100%;
+    min-height:56px;
+    resize:vertical;
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:8px 10px;
+    font-family:var(--body);
+    font-size:13.5px;
+    color:var(--ink);
+    background:#fbfbfa;
+  }
+  textarea.notes:focus{outline:2px solid var(--accent-soft);border-color:var(--accent);}
+
+  /* ---------- Footer ---------- */
+  .footer{
+    margin-top:48px;
+    background:var(--accent-soft);
+    border:1px solid #cfe0ee;
+    border-radius:10px;
+    padding:20px 22px;
+  }
+  .footer h3{
+    font-family:var(--display);
+    font-size:15px;
+    margin:0 0 8px 0;
+  }
+  .footer p{font-size:13.5px;color:var(--ink-soft);margin:0 0 8px 0;}
+  .footer p:last-child{margin-bottom:0;}
+  .save-note{
+    font-family:var(--mono);
+    font-size:11.5px;
+    color:var(--ink-faint);
+    text-align:center;
+    margin-top:18px;
+  }
+
+  @media (max-width:600px){
+    h1{font-size:26px;}
+    .case-title{max-width:150px;}
+    .runstat{flex-wrap:wrap;}
+  }
+</style>
+</head>
+<body>
+
+<div class="runbar">
+  <div class="wrap">
+    <p class="eyebrow">Individual Development Plan · Test Suite IDP-2026</p>
+    <h1>Liudmyla Vysochanska — QA Engineer</h1>
+    <p class="sub">Lead: Tetiana Marinska · Review cadence: check-ins as needed, full re-assessment in 12 months</p>
+    <div class="meta-row">
+      <span>CURRENT LEVEL: <b>Junior 3</b></span>
+      <span>TARGET LEVEL: <b>Middle 1</b></span>
+      <span>LAST SCORE: <b>26.1 / 75 (34.8%)</b></span>
+      <span>NEXT ASSESSMENT: <b id="reviewDate">November 2027</b></span>
+    </div>
+    <div class="runstat">
+      <div class="pct" id="overallPct">0%</div>
+      <div class="bar-track"><div class="bar-fill" id="overallBar"></div></div>
+      <div class="label" id="overallLabel">0 / 0 steps passed</div>
+    </div>
+    <p class="target-note">Goal: close the gap between <b>26.1</b> and the <b>35-pt</b> threshold for Middle 1 by working through the 12 test cases below over the next <b>12 months</b>.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- ================= PHASE 1 ================= -->
+  <div class="phase" data-phase="p1">
+    <div class="phase-head">
+      <div class="phase-title"><span class="phase-tag">Phase 1</span> The technical foundation</div>
+      <div class="phase-dates">Months 1–4</div>
+    </div>
+    <div class="phase-progress" style="margin-bottom:16px;">
+      <span>Phase progress</span>
+      <div class="mini-track"><div class="mini-fill" data-qfill="p1"></div></div>
+      <span data-qlabel="p1">0%</span>
+    </div>
+    <p class="phase-blurb">Client–server architecture first, because everything after it depends on it: APIs, traffic debugging, mobile tooling and half of what a Middle-level bug report contains. These three technical cases scored 1.0 from both you and your lead — the clearest agreement in the whole review, and the reason they come first. The fourth case sharpens the documentation and design work you already do daily.</p>
+
+    <div class="case" data-case="QA-IDP-01">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-01</span>
+          <span class="case-title">Client–Server Architecture</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Networks &amp; Protocols scored 1.0 and Web Applications scored 1.0 — the two lowest technical areas on the plan, and both scored 1.0 by you as well as by your lead. This is the case the whole plan is built on: the next three months of API work, traffic capture and bug investigation all assume you can say what happens between a client and a server and name the pieces in between. None of it waits on a project to hand you anything.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Client and server, properly: what each side is responsible for, and why a browser, a mobile app, a desktop app or another service can all be the client. Draw the request/response path for one flow you test today</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>DNS and IP in practice: clear your DNS cache, load a page, and follow how the domain name became an address and where the response came from</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Write out everything that happens between typing a URL and seeing the page — resolution, connection, request, response, render — using a page from your own project</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Tiers in architecture: one-, two-, three- and multi-tier. Say which shape your current project has and which tier a given bug would live on</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Load balancer, reverse proxy and API gateway: what each one sits in front of and why — then name one symptom in testing that each can produce (a request that lands on a different instance, a cached response, a rejected header)</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Monolith, microservices and serverless: compare them on deployment, failure isolation and what changes for a tester, and say which one your project resembles</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Environments — dev, stage, prod: what differs between them, and why a bug reproduces on one and not another. Write down what differs on your own project</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>Explain the full path of a request to a colleague in under five minutes, using your own project as the running example</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Explains the client–server path and name resolution unprompted, names the tier structure of her own project, and says what a load balancer, reverse proxy and API gateway each change for testing. Can classify a system as monolith or microservices and state what that means for where bugs appear.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> MDN — How the Web works · Cloudflare Learning Center (DNS, load balancing, reverse proxy) · howdns.works</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-02">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-02</span>
+          <span class="case-title">HTTP: Requests, Responses, Status Codes</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Debugging HTTP requests, status codes and proxy tools scored 1.0. This is the layer every API test, every DevTools session and every piece of bug evidence rests on — and it is the difference between a report that says "the screen is wrong" and one that says "the response is wrong, here it is". Everything below can be practised on any application you already have open.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>URI anatomy — scheme, host, port, path, query parameters, fragment: break down three real URLs from your own project and say what each part controls</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Capture one real request/response pair in DevTools and label every part of it: method, URL, headers, body · status, headers, body, time</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Methods and what each one promises: GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS — plus which are safe and which are idempotent, and what that means when a request is retried</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Status codes by group with the ones you will actually meet (200/201/204 · 301/302/304 · 400/401/403/404/409/422 · 500/502/503). For each, say who is at fault: the user, the client app or the back end</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Headers that change test outcomes — Content-Type, Accept, Authorization, Cache-Control, Set-Cookie, User-Agent: change one on a real request and watch what breaks</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Body types — JSON, form-data, x-www-form-urlencoded, raw: when each is used, and how a wrong Content-Type surfaces as a bug</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Authorization schemes — basic, API key, bearer token, OAuth 2.0: find which one your project uses by reading a real request</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>HTTP vs HTTPS: what TLS adds, and what that changes when you want to intercept traffic</label></li>
+            <li class="step"><input type="checkbox" data-step="8"><label>File one bug report where the evidence is the request and the response rather than the screen</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Reads a request/response pair and says what is wrong and on which side. Names the status code groups with examples unprompted, and can argue that a returned code is the wrong one for the situation.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> MDN HTTP reference — methods, status codes, headers · httpstatuses.com · the API documentation on your own project</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-03">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-03</span>
+          <span class="case-title">Web Internals &amp; DevTools</span>
+          <span class="priority medium">Medium</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Web Applications scored 1.0 across all three sub-areas — REST and JSON, DevTools with cache, cookies, session and auth, and iframe/JavaScript. This is the layer behind most "it still shows the old data", "it logged me out" and "it works for me" bugs, and it is also where bug investigation and root cause analysis — one of your own stated growth zones — actually happens.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>JSON: structure, data types, nesting, arrays. Read one real response from your project and say what each field means, then find what a malformed one looks like</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Cache lives on the client: what it stores, and what goes wrong when it is stale. Write one bug you could file against it</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Cookies: open DevTools → Application and read one real cookie from your project — what it holds, who set it, when it expires</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Session vs localStorage vs sessionStorage: where each lives, and what survives a tab close and a browser restart. Check each one on a real login flow</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Authentication vs authorization: find one example of each in your own project's behaviour and write the bug you would file for each</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>DevTools panels past Network: Application → Storage, Console, Performance, and network throttling on one real flow</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Use the Network panel as bug evidence: attach the failing request to a real ticket instead of describing it</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>iframe and JavaScript: what an iframe breaks for a tester (focus, scrolling, cross-origin), and what a Console error tells you about where a bug sits</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Separates cache, cookies, session and storage without hesitation, explains authentication vs authorization with her own examples, and reaches for the DevTools panel that fits the question rather than only Network.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> MDN — HTTP caching, Cookies, Web Storage API · Chrome DevTools official docs</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-04">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-04</span>
+          <span class="case-title">Test Documentation &amp; Design Techniques</span>
+          <span class="priority medium">Medium</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Test Documentation &amp; Standards scored 2.33 — test cases and management 2.0, test design techniques 2.5, defect management 2.5 — and you named test planning, test case design and documentation as growth zones yourself. These techniques are also what the API test design in Phase 2 is built on, so the work here pays twice.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Equivalence partitioning and boundary value analysis on one real input field: write the partitions and the boundaries down <i>before</i> writing a single case</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Decision table on one real feature with two or more conditions</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>State transition on a flow that has states — login/session, order status, booking: draw the diagram, derive the cases from it</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Pairwise testing on one screen with several independent settings, and note how many combinations it saved you</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>From now on, for each feature write one line on which technique you chose and why, before you start designing cases</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Rewrite five of your weakest existing test cases: one clear precondition, one action per step, one checkable expected result</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Traceability: requirements down one axis, cases across the other. Build a small one for a single feature and use it to find what isn't covered</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>Take three of your own bug reports and add what was missing — environment, build, precondition, actual vs expected, evidence</label></li>
+            <li class="step"><input type="checkbox" data-step="8"><label>Severity vs priority: re-triage five past defects on both scales and write the one-line reason for each</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Chooses a design technique deliberately and can say why, having applied equivalence partitioning, boundary values, a decision table and state transition on real features. Test cases and bug reports are reproducible by someone who did not write them.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> ISTQB Foundation Level, chapter 4 — test techniques · pairwise.teremokgames.com for combination sets</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PHASE 2 ================= -->
+  <div class="phase" data-phase="p2">
+    <div class="phase-head">
+      <div class="phase-title"><span class="phase-tag">Phase 2</span> APIs, Postman and the tools around them</div>
+      <div class="phase-dates">Months 5–8</div>
+    </div>
+    <div class="phase-progress" style="margin-bottom:16px;">
+      <span>Phase progress</span>
+      <div class="mini-track"><div class="mini-fill" data-qfill="p2"></div></div>
+      <span data-qlabel="p2">0%</span>
+    </div>
+    <p class="phase-blurb">The centre of the plan, and the area you named as your own goal: API testing scored 1.0 in all three sub-areas. The order is deliberate — understand the contract and its documentation, then build a suite that checks it, then learn to decide what is worth checking. The mobile tooling case closes the one sub-area that sits well below the rest of your mobile work.</p>
+
+    <div class="case" data-case="QA-IDP-05">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-05</span>
+          <span class="case-title">API Fundamentals, Swagger &amp; Documentation</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">API Testing scored 1.0 in all three sub-areas — concepts, API vs web service vs UI, and tools and documentation — agreed by both you and your lead. It is also the area your lead named as the priority for this period alongside client–server architecture, and the one you set as your own goal. Phase 1 gave you the request; this case gives you the contract the request belongs to.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Write what an API is in your own words against one real endpoint from your project: what it accepts, what it returns, what it promises</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>API vs web service: every web service is an API, not every API is a web service. Say which of the two your project exposes and how you can tell</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>REST, SOAP and GraphQL: how you would recognise which one you are testing from a single request, and what changes in your approach for each</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>The REST constraints that have test consequences — statelessness and a uniform interface above all: name one test implication of each</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Read your project's API documentation end to end and list three endpoints you have never tested</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Swagger / OpenAPI: open a real spec, find an endpoint, read its parameters, schemas and example responses, and execute it straight from the Swagger UI</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Compare the spec against the actual response of the same endpoint and record any difference — a documentation mismatch is a bug worth filing</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>cURL: build one request by hand from a spec, run it, read the response — then convert it to and from a Postman request</label></li>
+            <li class="step"><input type="checkbox" data-step="8"><label>Pick one feature and split it: what you would cover on the API, and what still genuinely needs the UI</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Explains API vs web service and REST vs SOAP vs GraphQL unprompted, reads a Swagger spec without help, and has filed at least one mismatch between documentation and behaviour. Can say which layer a given check belongs on.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> swagger.io/docs — OpenAPI specification · petstore.swagger.io for practice · your own project's API documentation · reqres.in</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-06">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-06</span>
+          <span class="case-title">Postman: From Requests to a Test Suite</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Tools and documentation scored 1.0, and "become more confident in API testing using Postman" is your own goal for the period. The step that matters here is the one from <i>the request runs</i> to <i>the collection checks, and tells me when something changed</i> — that is what makes API testing worth the time it costs, and it is the single clearest piece of evidence you can bring to the next review.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Build a collection for one real project: folders by feature, every request named so a colleague can read it without asking you</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Environments and variables: one environment per configuration, and no hard-coded URLs, ids or tokens left anywhere in the collection</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Authorization: set up the scheme your project uses, then capture the token automatically after sign-in so you never paste one by hand again</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Assertions: status code, response time, a field's presence and type, and a returned value matching what you sent</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Negative cases on one endpoint — missing required field, wrong type, empty body, oversized value, invalid token, expired token: check that the status code <i>and</i> the error message both make sense</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Chain two requests so the second uses an id returned by the first, and clean up what you created in a third</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Pre-request scripts: generate the test data a request needs instead of preparing it by hand</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>Data-driven testing: drive one request from a CSV or JSON file of cases and read the run report</label></li>
+            <li class="step"><input type="checkbox" data-step="8"><label>JSON schema validation on one endpoint, so a changed contract fails the run instead of passing quietly</label></li>
+            <li class="step"><input type="checkbox" data-step="9"><label>Mock server: mock an endpoint that does not exist yet or returns data you cannot trigger, and test the client against it</label></li>
+            <li class="step"><input type="checkbox" data-step="10"><label>Run the whole collection with the collection runner, export the report, and attach it to a real release summary</label></li>
+            <li class="step"><input type="checkbox" data-step="11"><label>Run the same collection once from the command line with the Postman CLI or Newman, so the suite can run somewhere other than your machine</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Owns a collection that asserts rather than just runs — environments, captured token, negative cases, chained requests, schema validation — and produces a run report that goes into release decisions. Can run it from the command line.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> Postman Learning Center — tests and scripts, variables, collection runner, mock servers, Postman CLI · reqres.in and petstore.swagger.io for practice</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-07">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-07</span>
+          <span class="case-title">Test Analysis &amp; Design for APIs</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Knowing the tool is half of API testing; the other half is deciding what is worth testing and being able to show the coverage to someone else. This case takes the design techniques from QA-IDP-04 and applies them where there is no screen to look at — which is also what makes the coverage hard to see and easy to overstate.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Write a short test strategy for one API: what you will cover, what you will not, and the reason for the line you drew</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Mind-map one endpoint group: parameters, data types, boundaries, auth states, dependencies, error paths</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Apply equivalence partitioning and boundary values to request parameters — the same techniques as the UI, on fields you cannot see</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Build the auth matrix for one endpoint: no token, expired token, valid token for the wrong role, valid token for the right role</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Contract checks: required vs optional fields, data types, nullability, and independence from field order</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Idempotency and side effects: send the same POST twice and the same PUT twice, and write down what should differ</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Sequence and dependency: what happens when requests arrive out of order, or a prerequisite entity was already deleted</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>Turn the mind-map into a checklist in your test management tool, so the coverage is visible to someone who is not you</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Starts API work from analysis rather than from a request, and can show a reviewer what is covered, what is deliberately not, and why. Negative, auth and contract cases are part of the default set rather than an afterthought.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> ISTQB Foundation Level, chapter 4 · xmind or miro for the mind-maps · OWASP API Security Top 10 for the auth cases</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-08">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-08</span>
+          <span class="case-title">Mobile Tooling &amp; Traffic Capture</span>
+          <span class="priority medium">Medium</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Mobile Applications scored 2.13 overall, and within it the tooling sub-area — Android Studio, Xcode, ADB — scored 1.0 against 2.5 for everything else. The gap is the tooling, not the testing, and you named it as your own goal for the period. With Phase 1 behind you, this is where reading traffic turns from theory into the fastest upgrade available to your bug reports.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Android Studio: create an emulator, install a build on it, and reproduce one existing bug</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>ADB: <i>adb devices</i>, <i>adb install</i>, <i>adb logcat</i> filtered to the app. Capture a log while reproducing a crash and attach it to a ticket</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Xcode: launch an iOS simulator, install a build, and open the device log for it</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Emulator vs simulator vs real device, in your own words — plus the list of what neither can test: camera, biometrics, battery, real network, true performance</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Capture mobile traffic: put a proxy between the app and the back end, trust the certificate on the device, and read one complete user flow</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Replace one response with your own and watch the app handle empty, huge or malformed data — error states you can reach without asking a developer for anything</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Throttle the network on one flow and note what the UI does while it waits: spinners, timeouts, double submissions</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>Attach a captured request/response pair to a real bug report instead of describing it in words</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Runs builds on an emulator and an iOS simulator, pulls a log with ADB, and captures and modifies traffic on a mobile flow. Bug reports on mobile projects carry the request and the log rather than a description.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> Android Developers — AVD and ADB · Apple Simulator documentation · Postman proxy or Proxyman docs for certificate setup and response mocking</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PHASE 3 ================= -->
+  <div class="phase" data-phase="p3">
+    <div class="phase-head">
+      <div class="phase-title"><span class="phase-tag">Phase 3</span> Planning, AI and ownership</div>
+      <div class="phase-dates">Months 9–12</div>
+    </div>
+    <div class="phase-progress" style="margin-bottom:16px;">
+      <span>Phase progress</span>
+      <div class="mini-track"><div class="mini-fill" data-qfill="p3"></div></div>
+      <span data-qlabel="p3">0%</span>
+    </div>
+    <p class="phase-blurb">What separates a strong Junior from a Middle is not more knowledge — it is making decisions visible and making your work usable by other people. Estimation turns your time into something that can be negotiated instead of assumed; AI is where your own goals and your lead's recommendation meet; sharing makes the first two phases count for the team as well as for you.</p>
+
+    <div class="case" data-case="QA-IDP-09">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-09</span>
+          <span class="case-title">Test Estimation &amp; Planning</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">Test Estimation &amp; Planning techniques scored 1.0 — the lowest sub-area in Test Management, which averaged 1.5 overall. You scored yourself 2.0 there, one of the closest matches in the whole review, so the direction is already right. Estimation is what makes your time negotiable: without a number and the assumptions behind it, scope gets decided for you and the shortfall shows up as missed coverage.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>The techniques and when each one fits: expert judgement, analogous, three-point, bottom-up, top-down, parametric, planning poker, T-shirt sizing</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Three-point estimation on one upcoming task: write the optimistic, likely and pessimistic numbers and the result the formula gives</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Bottom-up on your next feature: split it into analysis, design, execution, regression and reporting, estimate each, then sum</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Add the buffer honestly — environment downtime, re-testing after fixes, blocked time: name a percentage and the reason behind it</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Record estimate against actual for your next five tasks, and write one line on where each difference came from</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>Say the estimate out loud in planning together with the assumptions it rests on, so it can be challenged before the deadline rather than after it</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>When the estimate does not fit the date, bring the trade-off rather than the refusal: what you will cover, what you will drop, and the risk of dropping it</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>Write a one-page test plan for one project: scope, approach, environments, entry and exit criteria, risks</label></li>
+            <li class="step"><input type="checkbox" data-step="8"><label>Release readiness: a short checklist of what must be true before a build ships — blockers, open high-severity defects, smoke run on the target devices, known issues documented</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Produces an estimate with a technique behind it and assumptions attached, tracks it against the actual, and brings a scope trade-off when the two do not meet. Has a written test plan and release checklist in use on a real project.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> ISTQB Foundation Level, chapter 5 — test management · your own tickets and time records as the data source</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-10">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-10</span>
+          <span class="case-title">AI in Daily QA Work</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">You named prompt engineering and AI tools in both your growth zones and your goals, and your lead's recommendation is to use AI more in day-to-day work. The aim is not to use it more — it is to use it where it saves real time, and to be able to tell when its output is wrong. That second part is the QA skill, and it is the one that makes the first part safe.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Prompt structure that works for QA — role, context, the input, the exact output format, the constraints: rewrite one weak prompt into this shape and compare the two results side by side</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Give it the requirement rather than the task: feed a real user story with its acceptance criteria, ask for test conditions, then judge what it missed</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Test data: generate realistic sets including boundary and invalid values — synthetic only, never real user data</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Test case drafting: generate a first draft from a requirement, then edit it as a reviewer. Record what you had to fix — that pattern is your prompt's weakness, not the model's</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Bug reports: use it to tighten wording and reproduction steps, never to describe behaviour you did not observe</label></li>
+            <li class="step"><input type="checkbox" data-step="5"><label>API work: generate assertions and schema drafts from a real response, and read every line before it goes into a collection</label></li>
+            <li class="step"><input type="checkbox" data-step="6"><label>Requirement review: ask for the gaps, ambiguities and contradictions in a specification, then verify each one it names before raising it</label></li>
+            <li class="step"><input type="checkbox" data-step="7"><label>Know what must not be sent: no production or personal data, no credentials, no client material outside the agreed tools. Write your own one-line rule and follow it</label></li>
+            <li class="step"><input type="checkbox" data-step="8"><label>List three tasks where AI saved you time and two where it cost you time — and keep using it only on the first list</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Uses AI routinely on test design, test data, documentation review and API assertions, with prompts that produce usable first drafts — and reviews every output before it reaches a ticket, a collection or a client. Knows exactly what may not be sent.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> the QA team's AI knowledge-sharing sessions · Postman's built-in AI features · your company's rules on handling client and personal data</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-11">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-11</span>
+          <span class="case-title">Sharing With the QA Team</span>
+          <span class="priority medium">Medium</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">You wrote that you share knowledge with colleagues and take ownership of your tasks, and your lead's recommendation is to do both more actively — and to learn from colleagues in return. This is also the clearest Middle-level signal there is: at that level the work stops being only yours. Quality ownership scored 2.0, so this case turns an intention you already have into something visible.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Write a one-page how-to for your Postman setup: environments, variables, capturing the token, pointing it at a new project — enough for someone to copy it without asking you</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>Turn one collection into a template a colleague could fork at the start of a new project</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>Run a knowledge-sharing session for the QA team on API testing with Postman — your own screenshots, one live run</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Collect the questions people asked and write down the ones you could not answer: those are your next learning items, chosen by the team rather than by a syllabus</label></li>
+            <li class="step"><input type="checkbox" data-step="4"><label>Pick one colleague whose strength is a gap of yours and ask them to walk you through it — and book the next one before that conversation ends</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">A written, reusable Postman setup the team can pick up on their own, at least one session delivered, and a standing habit of learning one thing from a colleague rather than from documentation alone.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> your own collections and run reports · the QA team's knowledge-sharing sessions</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="case" data-case="QA-IDP-12">
+      <div class="case-head">
+        <div class="case-head-left">
+          <span class="case-id">QA-IDP-12</span>
+          <span class="case-title">Mock Assessment Dry-Run</span>
+          <span class="priority high">High</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="status-badge todo" data-status="">NOT STARTED</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="case-body">
+        <div class="field">
+          <div class="field-label">Starting point</div>
+          <div class="precondition">November 2026 scored 26.1 / 75 (34.8%) and confirmed Junior 3; Middle 1 sits at 35 / 75, so the plan above needs to be worth around nine points. Your own total was 37.9 — a difference of 11.8, concentrated in testing fundamentals, methodologies, requirement analysis, non-functional testing and soft skills. Where the two columns agreed exactly was the technical block: networks, databases, web applications and API testing, all at 1.0 from both sides. That agreement is worth saying out loud — you already know where the gaps are, and this plan spends most of its time there. The work before the next review is making sure every score you give yourself can be backed by an example rather than a definition.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Steps to learn</div>
+          <ul class="steps">
+            <li class="step"><input type="checkbox" data-step="0"><label>Re-score yourself against all 15 areas without looking at the November form, then compare with both columns</label></li>
+            <li class="step"><input type="checkbox" data-step="1"><label>For every area where November's self-score sat 1.5 points or more above the lead's, write what evidence would have justified your number — and whether you have that evidence now</label></li>
+            <li class="step"><input type="checkbox" data-step="2"><label>For every sub-area still below 2, write one concrete example from the past year instead of a definition</label></li>
+            <li class="step"><input type="checkbox" data-step="3"><label>Run a mock interview with your lead on the areas this plan targets hardest: client–server architecture, API testing and test estimation</label></li>
+          </ul>
+        </div>
+        <div class="field">
+          <div class="field-label">Expected result</div>
+          <div class="expected">Self-assessment lands within ±3 points of the lead's, with a projected total at or above 35 / 75 — the Middle 1 threshold.</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Resources</div>
+          <div class="resources"><i>Suggested:</i> the QA Performance Review form (15 areas) · your notes from the eleven cases above</div>
+        </div>
+        <div class="field">
+          <div class="field-label">Notes / progress log</div>
+          <textarea class="notes" placeholder="Jot down questions, links you found useful, or what clicked..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <h3>How to use this plan</h3>
+    <p>Work roughly one phase at a time, but feel free to move faster on anything that clicks quickly. Check off each step as you complete it — a test case flips to <b>PASS</b> once every step inside it is checked.</p>
+    <p>Your progress is saved automatically in this document, so you can close it and come back anytime over the next 12 months.</p>
+    <p>Reach out to your QA Lead whenever you need help or want to talk something through. Full re-assessment against the same rubric happens in 12 months.</p>
+  </div>
+
+  <p class="save-note" id="saveNote">Starting a fresh plan — progress will be saved automatically from now on.</p>
+
+</div>
+
+<script>
+(function(){
+  const CASES = {
+    "QA-IDP-01": 8, "QA-IDP-02": 9, "QA-IDP-03": 8, "QA-IDP-04": 9,
+    "QA-IDP-05": 9, "QA-IDP-06": 12, "QA-IDP-07": 8, "QA-IDP-08": 8,
+    "QA-IDP-09": 9, "QA-IDP-10": 9, "QA-IDP-11": 5, "QA-IDP-12": 4
+  };
+  const PHASE_CASES = {
+    p1: ["QA-IDP-01","QA-IDP-02","QA-IDP-03","QA-IDP-04"],
+    p2: ["QA-IDP-05","QA-IDP-06","QA-IDP-07","QA-IDP-08"],
+    p3: ["QA-IDP-09","QA-IDP-10","QA-IDP-11","QA-IDP-12"]
+  };
+  const STORAGE_KEY = "idp-liudmyla-2026-progress";
+
+  let state = {};
+  Object.keys(CASES).forEach(id => {
+    state[id] = { steps: new Array(CASES[id]).fill(false), notes: "" };
+  });
+
+  /* Works both as a hosted page (localStorage) and inside a document
+     host that provides window.storage. */
+  const store = {
+    async get(){
+      if (window.storage && typeof window.storage.get === 'function'){
+        const r = await window.storage.get(STORAGE_KEY, false);
+        return r && r.value ? r.value : null;
+      }
+      return localStorage.getItem(STORAGE_KEY);
+    },
+    async set(value){
+      if (window.storage && typeof window.storage.set === 'function'){
+        return window.storage.set(STORAGE_KEY, value, false);
+      }
+      localStorage.setItem(STORAGE_KEY, value);
+    }
+  };
+
+  function caseStatus(id){
+    const st = state[id];
+    const total = st.steps.length;
+    const done = st.steps.filter(Boolean).length;
+    if (done === 0) return 'todo';
+    if (done === total) return 'pass';
+    return 'progress';
+  }
+
+  function statusLabel(s){
+    if (s === 'pass') return 'PASS';
+    if (s === 'progress') return 'IN PROGRESS';
+    return 'NOT STARTED';
+  }
+
+  function render(){
+    Object.keys(CASES).forEach(id => {
+      const card = document.querySelector(`.case[data-case="${id}"]`);
+      if (!card) return;
+      const st = state[id];
+      card.querySelectorAll('.step').forEach((stepEl, i) => {
+        const cb = stepEl.querySelector('input[type=checkbox]');
+        cb.checked = !!st.steps[i];
+        stepEl.classList.toggle('checked', !!st.steps[i]);
+      });
+      const notesEl = card.querySelector('textarea.notes');
+      if (notesEl && notesEl.value !== st.notes) notesEl.value = st.notes;
+
+      const s = caseStatus(id);
+      const badge = card.querySelector('[data-status]');
+      badge.textContent = statusLabel(s);
+      badge.className = 'status-badge ' + s;
+    });
+    updateProgressBars();
+  }
+
+  function updateProgressBars(){
+    let totalSteps = 0, totalDone = 0;
+    Object.keys(CASES).forEach(id => {
+      totalSteps += state[id].steps.length;
+      totalDone += state[id].steps.filter(Boolean).length;
+    });
+    const pct = totalSteps ? Math.round((totalDone/totalSteps)*100) : 0;
+    document.getElementById('overallPct').textContent = pct + '%';
+    document.getElementById('overallBar').style.width = pct + '%';
+    document.getElementById('overallLabel').textContent = `${totalDone} / ${totalSteps} steps passed`;
+
+    Object.keys(PHASE_CASES).forEach(p => {
+      let pTotal = 0, pDone = 0;
+      PHASE_CASES[p].forEach(id => {
+        pTotal += state[id].steps.length;
+        pDone += state[id].steps.filter(Boolean).length;
+      });
+      const ppct = pTotal ? Math.round((pDone/pTotal)*100) : 0;
+      const fillEl = document.querySelector(`[data-qfill="${p}"]`);
+      const labelEl = document.querySelector(`[data-qlabel="${p}"]`);
+      if (fillEl) fillEl.style.width = ppct + '%';
+      if (labelEl) labelEl.textContent = ppct + '%';
+    });
+  }
+
+  let saveTimer = null;
+  function scheduleSave(){
+    const note = document.getElementById('saveNote');
+    note.textContent = 'Saving…';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(async () => {
+      try{
+        await store.set(JSON.stringify(state));
+        note.textContent = 'Progress saved · ' + new Date().toLocaleTimeString();
+      }catch(e){
+        note.textContent = 'Could not save progress — your changes may not persist after closing this document.';
+      }
+    }, 500);
+  }
+
+  async function loadState(){
+    const note = document.getElementById('saveNote');
+    try{
+      const raw = await store.get();
+      if (raw){
+        const saved = JSON.parse(raw);
+        Object.keys(CASES).forEach(id => {
+          if (saved[id]){
+            state[id].steps = (saved[id].steps || []).slice(0, CASES[id]);
+            while (state[id].steps.length < CASES[id]) state[id].steps.push(false);
+            state[id].notes = saved[id].notes || "";
+          }
+        });
+      }
+      note.textContent = 'Progress saved automatically in this document.';
+    }catch(e){
+      note.textContent = 'Starting a fresh plan — progress will be saved automatically from now on.';
+    }
+    render();
+  }
+
+  function bindEvents(){
+    document.querySelectorAll('.case-head').forEach(head => {
+      head.addEventListener('click', () => {
+        head.closest('.case').classList.toggle('open');
+      });
+    });
+
+    document.querySelectorAll('.case').forEach(card => {
+      const id = card.getAttribute('data-case');
+      card.querySelectorAll('.step input[type=checkbox]').forEach((cb, i) => {
+        cb.addEventListener('click', (e) => e.stopPropagation());
+        cb.addEventListener('change', () => {
+          state[id].steps[i] = cb.checked;
+          cb.closest('.step').classList.toggle('checked', cb.checked);
+          const s = caseStatus(id);
+          const badge = card.querySelector('[data-status]');
+          badge.textContent = statusLabel(s);
+          badge.className = 'status-badge ' + s;
+          updateProgressBars();
+          scheduleSave();
+        });
+      });
+      const notesEl = card.querySelector('textarea.notes');
+      if (notesEl){
+        notesEl.addEventListener('click', (e) => e.stopPropagation());
+        notesEl.addEventListener('input', () => {
+          state[id].notes = notesEl.value;
+          scheduleSave();
+        });
+      }
+    });
+
+    // open first case of each phase by default
+    document.querySelectorAll('.phase').forEach(p => {
+      const first = p.querySelector('.case');
+      if (first) first.classList.add('open');
+    });
+  }
+
+  bindEvents();
+  loadState();
+})();
+</script>
+
+</body>
+</html>
